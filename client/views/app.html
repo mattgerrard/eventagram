@@ -5,20 +5,33 @@
     <SocketStream/>
     <title>Eventagram \_O_/</title>
   </head>
+        <style type="text/css">
+            img.thumb {
+                max-width: 100px;
+                max-height: 100px;
+            }
+        </style>
 <body>
 
 <h3>Events</h3>
 
 <form data-bind="submit: addEvent">
     Add event: <input data-bind="value: newEventText" placeholder="Event name" />
-    <button type="submit">Add</button>
+    <button data-bind="jqButton: { enable: true }">Add</button>
 </form>
 
 <!-- A list of events! -->
 <ul data-bind="foreach: events, visible: events().length > 0">
     <li>
-        <input data-bind="value: title" />
+        <span data-bind="text: title"></span>
     </li> 
 </ul>
+<select data-bind="options: events, optionsCaption: 'Select event', optionsText: 'title', value: selectedEvent"></select>
+
+ <input type="file" accept="image/*" data-bind="file: imageFile, fileObjectURL: imageObjectURL, fileBinaryData: imageBinary"/>
+<div data-bind="if: imageObjectURL">
+    <img class="thumb" data-bind="attr: { src: imageObjectURL }"/>
+</div>
+<button data-bind="jqButton: { enable: true }">Add to event</button>
 </body>
 </html>

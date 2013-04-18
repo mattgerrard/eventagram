@@ -1,5 +1,5 @@
 function Event(data) {
-    this.id = ko.observable(data.id)
+    this.id = ko.observable(data._id)
     this.title = ko.observable(data.title);
 }
 
@@ -10,6 +10,11 @@ function AppViewModel() {
     var self = this;
     self.events = ko.observableArray([]);
     self.newEventText = ko.observable();
+    
+    self.selectedEvent = ko.observable();
+    self.imageFile = ko.observable();
+    self.imageObjectURL = ko.observable();
+    self.imageBinary = ko.observable();
 
     // Operations
     self.addEvent = function() {
@@ -37,6 +42,43 @@ function AppViewModel() {
         var currentValue = valueAccessor();
         // Here we just update the "disabled" state, but you could update other properties too
         $(element).button("option", "disabled", currentValue.enable === false);
+      }
+    }
+
+    var windowURL = window.URL || window.webkitURL;
+
+    ko.bindingHandlers.file = {
+    init: function(element, valueAccessor) {
+        $(element).change(function() {
+            var file = this.files[0];
+            if (ko.isObservable(valueAccessor())) {
+                valueAccessor()(file);
+            }
+        });
+    },
+    update: function(element, valueAccessor, allBindingsAccessor) {
+        var file = ko.utils.unwrapObservable(valueAccessor());
+        var bindings = allBindingsAccessor();
+
+        if (bindings.fileObjectURL && ko.isObservable(bindings.fileObjectURL)) {
+            var oldUrl = bindings.fileObjectURL();
+            if (oldUrl) {
+                windowURL.revokeObjectURL(oldUrl);
+            }
+            bindings.fileObjectURL(file && windowURL.createObjectURL(file));
+        }
+
+        if (bindings.fileBinaryData && ko.isObservable(bindings.fileBinaryData)) {
+            if (!file) {
+                bindings.fileBinaryData(null);
+            } else {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    bindings.fileBinaryData(e.target.result);
+                };
+                reader.readAsArrayBuffer(file);
+            }
+        }
       }
     };
 
