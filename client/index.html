@@ -5,11 +5,37 @@
     <meta charset="utf-8"/>
     <title>Eventagram \_O_/</title>
     <link href="components/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="css/site.css" rel="stylesheet" />
 </head>
 
 <body>
 
-    <div data-ng-view=""></div>
+	<div class="container">
+		<div class="header">
+			<h3 class="muted">eventagram</h3>
+			<div class="navbar">
+				<div class="navbar-inner">
+					<div class="container">
+						<ul class="nav" data-ng-controller="NavigationController">
+							<li data-ng-class="{'active':getClass('/dashboard')}"><a href="#/">Dashboard</a></li>
+							<li data-ng-class="{'active':getClass('/events')}"><a href="#/events">Events</a></li>
+							<li><a href="#/calendar">Calendar</a></li>
+							<li><a href="#/photos">Photos</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="content">
+		    <div data-ng-view=""></div>
+		</div>
+
+	    <div class="footer">
+	    	<p>&copy; eventagram incorporated, in the year of our lord 2013</p>
+	    </div>
+	</div>
+
 
     <!-- Vendor libs -->
     <script src="components/angular/angular.js"></script>
@@ -18,7 +44,9 @@
 
     <!-- App libs -->
     <script src="app/app.js"></script>
-    <script src="app/controllers/home.js"></script>
+    <script src="app/controllers/dashboard.js"></script>
+    <script src="app/controllers/events.js"></script>
+    <script src="app/controllers/navigation.js"></script>
 
 </body>
 </html>
