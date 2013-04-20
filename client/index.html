@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-ng-app="eventApp">
+<html lang="en" data-ng-app="eventagram">
 
 <head>
     <meta charset="utf-8"/>
@@ -8,33 +8,14 @@
 
 <body>
 
-    <div>
-        <div data-ng-view=""></div>
-    </div>
+    <div data-ng-view=""></div>
 
+    <!-- Vendor libs -->
     <script src="components/angular/angular.js"></script>
-    
-    <script>
-        var eventApp = angular.module('eventApp', []);
 
-        eventApp.controller('EventController', function($scope) {
-            $scope.events = ['foo', 'bar', 'baz'];
-            $scope.addEvent = function() {
-                $scope.events.push($scope.newEvent.name);
-            };
-        });
+    <!-- App libs -->
+    <script src="app/app.js"></script>
+    <script src="app/controllers/home.js"></script>
 
-        eventApp.config(function ($routeProvider) {
-            $routeProvider
-                .when('/', {
-                    controller: 'EventController',
-                    templateUrl: 'list.html'})
-                .when('/add', {
-                    controller: 'EventController',
-                    templateUrl: 'add.html'})
-                .otherwise({ redirectTo: '/'});
-        });
-
-    </script>
 </body>
 </html>
