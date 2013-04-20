@@ -1,23 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
+<html lang="en" data-ng-app="eventApp">
+
+<head>
     <meta charset="utf-8"/>
     <title>Eventagram \_O_/</title>
-  </head>
+</head>
+
 <body>
 
-<h3>Events n ting</h3>
+    <div>
+        <div data-ng-view=""></div>
+    </div>
 
-<form data-bind="submit: addEvent">
-    Add event: <input data-bind="value: newEventText" placeholder="Event name" />
-    <button type="submit">Add</button>
-</form>
+    <script src="components/angular/angular.js"></script>
+    
+    <script>
+        var eventApp = angular.module('eventApp', []);
 
-<!-- A list of events! -->
-<ul data-bind="foreach: events, visible: events().length > 0">
-    <li>
-        <input data-bind="value: title" />
-    </li> 
-</ul>
+        eventApp.controller('EventController', function($scope) {
+            $scope.events = ['foo', 'bar', 'baz'];
+            $scope.addEvent = function() {
+                $scope.events.push($scope.newEvent.name);
+            };
+        });
+
+        eventApp.config(function ($routeProvider) {
+            $routeProvider
+                .when('/', {
+                    controller: 'EventController',
+                    templateUrl: 'list.html'})
+                .when('/add', {
+                    controller: 'EventController',
+                    templateUrl: 'add.html'})
+                .otherwise({ redirectTo: '/'});
+        });
+
+    </script>
 </body>
 </html>
