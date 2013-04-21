@@ -1,4 +1,4 @@
 
 
-app.controller('HomeController', function($scope, $location) {
+app.controller('DashboardController', function($scope, $location) {
 });

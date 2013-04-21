@@ -1,3 +1,5 @@
 
-app.controller('EventsController', function($scope, $location) {
+app.controller('EventsController', function($scope, eventService) {
+	$scope.events = eventService.all();
 });
+
