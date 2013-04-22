@@ -1,5 +1,6 @@
 var ss = require('socketstream');
-express = require('express');
+var express = require('express')
+  , path = require('path');
 
 var app = express();
 
@@ -16,6 +17,7 @@ app.configure( function () {
   app.use(express.bodyParser());
   app.use(app.router);
   app.use(express.favicon());
+  app.use(express.static(path.join(__dirname, 'client')));
 });
 
 // Define a single-page client called 'main'
