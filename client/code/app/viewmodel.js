@@ -1,6 +1,7 @@
 function Event(data) {
     this.id = ko.observable(data._id)
     this.title = ko.observable(data.title);
+    this.photos = ko.observable(data.photos);
 }
 
 // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
@@ -12,9 +13,6 @@ function AppViewModel() {
     self.newEventText = ko.observable();
     
     self.selectedEvent = ko.observable();
-    self.imageFile = ko.observable();
-    self.imageObjectURL = ko.observable();
-    self.imageBinary = ko.observable();
 
     // Operations
     self.addEvent = function() {
@@ -33,6 +31,16 @@ function AppViewModel() {
         }); 
     }
 
+    self.addPhotoToEvent = function() {
+        $.ajax("/addPhoto", {
+            data: ko.toJSON( { 
+                               eventid      : this.selectedEvent().id,
+                               photo   : this.images()[0]
+                             } ),
+            type: "post", contentType: "application/json",
+        });
+    }
+
     //Below should be in own file probably:
     ko.bindingHandlers.jqButton = {
       init: function(element) {
@@ -47,7 +55,7 @@ function AppViewModel() {
 
     var windowURL = window.URL || window.webkitURL;
 
-    ko.bindingHandlers.file = {
+ko.bindingHandlers.file = {
     init: function(element, valueAccessor) {
         $(element).change(function() {
             var file = this.files[0];
@@ -56,6 +64,7 @@ function AppViewModel() {
             }
         });
     },
+
     update: function(element, valueAccessor, allBindingsAccessor) {
         var file = ko.utils.unwrapObservable(valueAccessor());
         var bindings = allBindingsAccessor();
@@ -78,9 +87,52 @@ function AppViewModel() {
                 };
                 reader.readAsArrayBuffer(file);
             }
+            }
         }
-      }
     };
+
+
+    var slotModel = function() {
+        var that = {};
+
+        that.imageFile = ko.observable();
+        that.imageObjectURL = ko.observable();
+        that.imageBinary = ko.observable();
+
+        that.fileSize = ko.computed(function() {
+            var file = this.imageFile();
+            return file ? file.size : 0;
+        }, that);
+
+        that.bytes = ko.computed(function() {
+            if (that.imageBinary()) {
+                var buf = new Uint8Array(that.imageBinary());
+                return buf;
+            } else {
+                return null;
+            }
+        }, that);
+
+        return that;
+    };
+
+    self.beforeRemoveSlot = function(element, index, data) {
+        if (data.imageObjectURL()) {
+            windowURL.revokeObjectURL(data.imageObjectURL());
+        }
+        $(element).remove();
+    };
+
+    self.images = ko.observableArray([slotModel()]);
+
+    self.addSlot = function() {
+        self.images.push(slotModel());
+    };
+
+    self.removeSlot = function(data) {
+        self.images.remove(data);
+    };
+
 
     self.list();
 }

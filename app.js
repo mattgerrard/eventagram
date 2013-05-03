@@ -33,6 +33,7 @@ app.get('/', function(req, res) {
 });
 app.get('/events', routes.list);
 app.post('/events', routes.save);
+app.post('/addPhoto', routes.addPhoto);
 
 // Minimize and pack assets if you type: SS_ENV=production node app.js
 if (ss.env === 'production') ss.client.packAssets();
