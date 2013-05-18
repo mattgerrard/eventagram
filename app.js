@@ -31,7 +31,8 @@ ss.client.define('main', {
 app.get('/', function(req, res) {
   res.serveClient('main');
 });
-app.get('/events', routes.list);
+app.get('/events', routes.events);
+app.get('/events/photos', routes.eventPhotos);
 app.post('/events', routes.save);
 app.post('/addPhoto', routes.addPhoto);
 

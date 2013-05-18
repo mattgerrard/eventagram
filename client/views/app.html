@@ -23,36 +23,50 @@
 <!-- A list of events! -->
 <table>
     <thead>
-        <tr><th>Title</th>
+        <th>Title</th>
     </thead>
     <tbody data-bind="foreach: events">
         <tr>
             <td data-bind="text: title"></td>
-            <td>
-                <table>
-                    <tbody>
-                        <tr data-bind="foreach: photos">
-                            <td><img data-bind="attr: {src: 'data:image/png;base64,' + photo.data}" /></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </td>
         </tr>
     </tbody>
 </table>
 
 <select data-bind="options: events, optionsCaption: 'Select event', optionsText: 'title', value: selectedEvent"></select>
 <button data-bind="jqButton: { enable: true }, click: addPhotoToEvent">Add to event</button>
+<button data-bind="jqButton: { enable: true }, click: listEventPhotos">List photos</button>
+<button data-bind="jqButton: { enable: true }, click: getSingleEvent">Get a single event</button>
 
-        <div data-bind="foreach: { data: images, beforeRemove: beforeRemoveSlot }">
-            <div>
-                <input type="file" accept="image/*" data-bind="file: imageFile, fileObjectURL: imageObjectURL, fileBinaryData: imageBinary"/>
-                <div data-bind="if: imageObjectURL">
-                    <img class="thumb" data-bind="attr: { src: imageObjectURL }"/>
-                </div>
-                <div>Size: <span data-bind="text: fileSize"></span>&nbsp;bytes</div>
-            </div>
+<div data-bind="foreach: { data: images, beforeRemove: beforeRemoveSlot }">
+    <div>
+        <input type="file" accept="image/*" data-bind="file: imageFile, fileObjectURL: imageObjectURL, fileBinaryData: imageBinary"/>
+        <div data-bind="if: imageObjectURL">
+            <img class="thumb" data-bind="attr: { src: imageObjectURL }"/>
         </div>
+        <div>Size: <span data-bind="text: fileSize"></span>&nbsp;bytes</div>
+    </div>
+</div>
 
+<table>
+    <tbody>
+        <tr data-bind="foreach: selectedEventPhotos">
+            <p>herp</p>
+            <td><img data-bind="attr: {src: 'data:image/png;base64,' + photo.data}" /></td>
+        </tr>
+    </tbody>
+</table>
+A single event: 
+<table>
+    <thead>
+        <th>Id</th>
+        <th>Title</th>
+    </thead>
+    <tbody data-bind="with: singleEvent">
+        <tr>
+            <td data-bind="text: id"></td>
+            <td data-bind="text: title"></td>
+        </tr>
+    </tbody>
+</table>
 </body>
 </html>

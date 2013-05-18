@@ -1,7 +1,6 @@
 function Event(data) {
     this.id = ko.observable(data._id)
     this.title = ko.observable(data.title);
-    this.photos = ko.observable(data.photos);
 }
 
 // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
@@ -13,6 +12,8 @@ function AppViewModel() {
     self.newEventText = ko.observable();
     
     self.selectedEvent = ko.observable();
+    self.selectedEventPhotos = ko.observableArray();
+    self.singleEvent = ko.observable();
 
     // Operations
     self.addEvent = function() {
@@ -34,11 +35,29 @@ function AppViewModel() {
     self.addPhotoToEvent = function() {
         $.ajax("/addPhoto", {
             data: ko.toJSON( { 
-                               eventid      : this.selectedEvent().id,
+                               eventid : this.selectedEvent().id,
                                photo   : this.images()[0]
                              } ),
             type: "post", contentType: "application/json",
         });
+    }
+
+    self.listEventPhotos = function() {
+        $.getJSON("/events/photos", 
+        { eventid : this.selectedEvent().id },
+        function(allData) {
+            var mappedPhotos = $.map(allData, function(item) { return item.photos });
+            self.selectedEventPhotos(mappedPhotos);
+        }); 
+    }
+
+    self.getSingleEvent = function() {
+        $.getJSON("/events", 
+        { eventid : this.selectedEvent().id },
+        function(allData) {
+            var returnedEvent = new Event(allData);
+            self.singleEvent(returnedEvent); 
+        }); 
     }
 
     //Below should be in own file probably:
@@ -55,7 +74,7 @@ function AppViewModel() {
 
     var windowURL = window.URL || window.webkitURL;
 
-ko.bindingHandlers.file = {
+    ko.bindingHandlers.file = {
     init: function(element, valueAccessor) {
         $(element).change(function() {
             var file = this.files[0];
@@ -90,7 +109,6 @@ ko.bindingHandlers.file = {
             }
         }
     };
-
 
     var slotModel = function() {
         var that = {};
